@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - ./src:/app/code
+        ports:
+            - "8400:8400"
+        env_file:
+            - .env-defaults
+            - .env
+        command: sh -c """python manage.py runserver"""
+
+    db:
+        image: postgres:13.0-alpine
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        environment:
+            - TZ=Europe/Berlin
+            - SQL_USER=user
+            - SQL_PASSWORD=pass
+            - SQL_DB=db
+
+volumes:
+    postgres-data:
